@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>电话格式转换器</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        textarea { width: 100%; height: 150px; margin-bottom: 10px; }
+        button { padding: 10px 20px; margin-right: 10px; }
+        #output { white-space: pre; background: #f0f0f0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>📱 电话号码格式转换器</h2>
+    <p>粘贴你的号码（每行一个）：</p>
+    <textarea id="input"></textarea>
+    <br>
+    <button onclick="formatNumbers()">转换格式</button>
+    <button onclick="downloadTxt()">下载为 TXT</button>
+    <h3>输出结果：</h3>
+    <div id="output"></div>
+
+    <script>
+        function formatNumbers() {
+            const raw = document.getElementById("input").value;
+            const lines = raw.split(/\r?\n/);
+            const cleaned = lines.map(line => {
+                let num = line.replace(/[\s+]/g, "");
+                if (!num.startsWith("852")) {
+                    num = "852" + num;
+                }
+                return num;
+            }).filter(n => n.length > 3); // 过滤空行
+            document.getElementById("output").textContent = cleaned.join("\n");
+        }
+
+        function downloadTxt() {
+            const text = document.getElementById("output").textContent;
+            const blob = new Blob([text], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "formatted_numbers.txt";
+            link.click();
+        }
+    </script>
+</body>
+</html>
